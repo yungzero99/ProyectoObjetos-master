@@ -1,44 +1,58 @@
 package es.makigas.ModeracionAula.model;
-import org.openxava.annotations.*;
+
 import lombok.Getter;
 import lombok.Setter;
+import org.openxava.annotations.*;
 import org.openxava.model.Identifiable;
+
 import javax.persistence.*;
+import java.time.LocalDate;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-
-// Cambiado de java.util.Date a LocalTime
 @Entity
 @Getter
 @Setter
 @Table(name = "Marcado")
+
+@Views({
+        @View(name = "simple", members =
+                "Información Principal {" +
+                        "   matricula;" +
+                        "   turno, asistencia;" +
+                        "   fecha;" +
+                        "};"
+        ),
+        @View(name = "completa", members =
+                "Información General {" +
+                        "   matricula;" +
+                        "   turno, asistencia;" +
+                        "   fecha;" +
+                        "};" +
+                        "Detalle Matrícula {" +
+                        "   matricula.profesor.nombreCompleto;" +
+                        "   matricula.aula.nombreCompleto;" +
+                        "   matricula.horarios;" +
+                        "}"
+        )
+})
 public class Marcado extends Identifiable {
 
     @ManyToOne(optional = false)
-    @DescriptionsList(descriptionProperties = "nombreCompleto") // ¡Corregido!
-    private Aula aula; // Ahora usará el método getNombreCompleto() de Aula
-
-    @ManyToOne(optional = false)
-    @DescriptionsList(descriptionProperties = "nombreCompleto")
-    private Profesor profesor;
+    @DescriptionsList(descriptionProperties = "descripcionCompletaConHorarios")
+    private Matricula matricula;
 
     @Column(nullable = false)
     private boolean asistencia;
 
-    @ManyToOne(optional = false)
-    @DescriptionsList(descriptionProperties = "nombreClase")
-    private Clase clase;
-
     @Column(nullable = false)
-    @Stereotype("DATETIME")
-    private LocalDateTime horaInicio;
-
-    @Column(nullable = true)
-    @Stereotype("DATETIME")
-    private LocalDateTime horaFinal;
+    @ReadOnly
+    private LocalDate fecha;
 
     @Enumerated(EnumType.STRING)
     @Required
     private Turno turno;
+
+    @PrePersist
+    public void establecerFecha() {
+        this.fecha = LocalDate.now();
+    }
 }

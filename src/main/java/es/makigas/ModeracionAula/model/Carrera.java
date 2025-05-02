@@ -2,10 +2,16 @@ package es.makigas.ModeracionAula.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.openxava.annotations.*;
+import org.openxava.annotations.DescriptionsList;
+import org.openxava.annotations.Required;
+import org.openxava.annotations.Tab;
+import org.openxava.annotations.View;
 import org.openxava.model.Identifiable;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
 @Getter

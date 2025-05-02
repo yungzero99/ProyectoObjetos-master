@@ -6,7 +6,8 @@ import org.openxava.annotations.*;
 import org.openxava.model.Identifiable;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 @Entity
 @Getter
@@ -43,6 +44,9 @@ public class Aula extends Identifiable {
     @Required
     private Integer capacidad;
 
+    public String toString() {
+        return edificio.getNombreEdificio() + "-" + numeroAula.getNumero();
+    }
     // --------------- CAMPOS CALCULADOS ---------------
     @Transient
     @DisplaySize(30)

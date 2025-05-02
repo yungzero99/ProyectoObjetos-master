@@ -6,7 +6,7 @@ import org.openxava.annotations.*;
 import org.openxava.model.Identifiable;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 
 @Entity

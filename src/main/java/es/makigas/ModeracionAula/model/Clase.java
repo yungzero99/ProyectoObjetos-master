@@ -2,12 +2,13 @@ package es.makigas.ModeracionAula.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.openxava.annotations.*;
+import org.openxava.annotations.DescriptionsList;
+import org.openxava.annotations.ListProperties;
+import org.openxava.annotations.Required;
+import org.openxava.annotations.View;
 import org.openxava.model.Identifiable;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import java.time.LocalTime;
 import java.util.Collection;
 @Entity
 @Getter
@@ -25,6 +26,6 @@ public class Clase extends Identifiable {
     private Carrera carrera;
 
     @OneToMany(mappedBy = "clase")
-    @ListProperties("profesor.nombreCompleto, aula.nombreCompleto, grupo, turno")
+    @ListProperties("profesor.nombreCompleto, aula.nombreCompleto, grupo")
     private Collection<Matricula> matriculas; // Todos los grupos asociados
 }

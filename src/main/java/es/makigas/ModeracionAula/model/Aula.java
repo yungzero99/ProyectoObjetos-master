@@ -6,33 +6,62 @@ import org.openxava.annotations.*;
 import org.openxava.model.Identifiable;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.*;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "Aula")
-@View(name = "simple", members = "nombre, edificio") // Vista básica con el nombre y el edificio
-@Tab(properties = "nombre, edificio.nombreEdificio, capacidad") // Configuración para mostrar columnas en la tabla
+@Table(name = "Aula",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"edificio_id", "numeroAula_id"})
+)
+@Views({
+        @View(name = "simple", members = "edificio, numeroAula, capacidad"),
+        @View(name = "detalle", members =
+                "nombreCompleto;" +
+                        "edificio, numeroAula;" +
+                        "capacidad;" +
+                        "caracteristicas;" +
+                        "clases { clases }")
+})
+@Tab(properties = "nombreCompleto, capacidad, edificio.nombreEdificio")
 public class Aula extends Identifiable {
 
+    // --------------- RELACIONES OBLIGATORIAS ---------------
+    @ManyToOne(optional = false)
+    @DescriptionsList(descriptionProperties = "nombreEdificio")
+    @JoinColumn(name = "edificio_id")
+    private Edificio edificio;
 
     @ManyToOne(optional = false)
     @DescriptionsList(descriptionProperties = "numero")
-    // Nombre del aula
-    private NumeroAula numeroAula; // Relación con NumeroAula
+    @JoinColumn(name = "numeroAula_id")
+    private NumeroAula numeroAula;
 
-    @ManyToOne(optional = false) // Relación con Edificio, obligatorio
-    @DescriptionsList(descriptionProperties = "nombreEdificio") // Usa 'nombreEdificio' como descripción
-    private Edificio edificio;
+    // --------------- CAMPOS PRINCIPALES ---------------
+    @Min(1)
+    @Max(200)
+    @Required
+    private Integer capacidad;
 
-    @Min(1) // Valida que la capacidad mínima sea 1
-    private Integer capacidad; // Capacidad del aula
-
-    // Opcional: Campo derivado para nombre completo (ej: "Edificio A-101")
+    // --------------- CAMPOS CALCULADOS ---------------
     @Transient
-    @DisplaySize(20)
+    @DisplaySize(30)
     public String getNombreCompleto() {
         return edificio.getNombreEdificio() + "-" + numeroAula.getNumero();
     }
+
+
+/*
+    // --------------- RELACIONES INVERTIDAS ---------------
+    @OneToMany(mappedBy = "aula")
+    @ListProperties("nombreClase, turno, profesor.nombreCompleto")
+    private Collection<Clase> clases;
+
+    // --------------- CARACTERÍSTICAS (CHECKBOXES) ---------------
+    @ManyToMany
+    @JoinTable(name = "aula_caracteristicas")
+    @Editor("Checkbox")
+    private Collection<CaracteristicaAula> caracteristicas;
+
+*/
 }

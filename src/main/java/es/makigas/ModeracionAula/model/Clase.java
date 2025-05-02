@@ -17,7 +17,7 @@ import java.util.Collection;
 public class Clase extends Identifiable {
 
     @Required
-    @Column(length = 100, unique = true) // Ej: "Cálculo I", "Física Cuántica"
+    @Column(length = 100, unique = false) // Ej: "Cálculo I", "Física Cuántica"
     private String nombreClase;
 
     @ManyToOne(optional = false)

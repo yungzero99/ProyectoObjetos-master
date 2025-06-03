@@ -18,7 +18,7 @@ import javax.persistence.Table;
 @View(name = "simple", members = "numero")
 @Tab(properties = "numero")
 public class NumeroAula extends Identifiable {
-
+///
     @Column(unique = true, nullable = false, length = 10)
     @Required
     private String numero; // Ej: "101", "201", "301"...
